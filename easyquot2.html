@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Point 1 - Cut-Off Reached</title>
+  <title>Point 2 - Offer Sold Out</title>
   <style>
     * {
       box-sizing: border-box;
@@ -82,23 +82,6 @@
     }
     .date-item.active .day, .date-item.active .date { color: #fff; }
 
-    .date-item.cutoff-disabled {
-      background: #f7fafc;
-      border: 1px dashed #cbd5e0;
-      cursor: not-allowed;
-      opacity: 0.65;
-    }
-    .date-item.cutoff-disabled .badge-cut {
-      display: inline-block;
-      font-size: 9px;
-      background: #e53e3e;
-      color: #fff;
-      padding: 1px 4px;
-      border-radius: 3px;
-      margin-top: 3px;
-      font-weight: 700;
-    }
-
     .package-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -119,6 +102,22 @@
       background: #1e3a8a;
       border-color: #1e3a8a;
       color: #fff;
+    }
+    .package-btn.expired-tab {
+      background: #fff5f5;
+      border: 1px dashed #feb2b2;
+      color: #c53030;
+      cursor: pointer;
+    }
+    .package-btn.expired-tab.active-due {
+      border: 2px solid #e53e3e;
+      background: #ffebeb;
+    }
+    .package-btn .due-tag {
+      display: block;
+      font-size: 10px;
+      font-weight: 700;
+      margin-top: 3px;
     }
 
     .qty-box {
@@ -149,20 +148,20 @@
       justify-content: space-between;
       align-items: center;
       gap: 15px;
-      background: #fffaf0;
-      border: 1px solid #fed7aa;
-      border-left: 5px solid #dd6b20;
+      background: #fff5f5;
+      border: 1px solid #feb2b2;
+      border-left: 5px solid #e53e3e;
     }
     .alert-title {
       font-weight: 700;
       font-size: 13.5px;
       margin-bottom: 3px;
-      color: #9a3412;
+      color: #991b1b;
     }
     .alert-desc {
       font-size: 13px;
       line-height: 1.4;
-      color: #7c2d12;
+      color: #7f1d1d;
     }
 
     .action-footer {
@@ -185,6 +184,7 @@
     }
     .btn-outline { border-color: #cbd5e0; background: #fff; color: #4a5568; }
     .btn-primary { background: #1e3a8a; color: #fff; }
+    
     .btn-quote {
       background: #dd6b20;
       color: #fff;
@@ -231,7 +231,7 @@
 
 <div class="container">
   <div class="preview-card">
-    <div class="tag-badge" style="background: #002d62;">POINT 1: Cut-Off Reached (Online Booking Remains Active) --- Go to <a href="easyquot2.html" style="color: red;"> Point 2 </a></div>
+    <div class="tag-badge" style="background: #9b2c2c;">POINT 2: Offer Due / Expired (Child Ticket Case) --- Go to <a href="easyquot.html" style="color: blue;"> Point 2 </a></div>
 
     <div class="header-section">
       <div class="title-area">
@@ -246,64 +246,34 @@
 
     <div class="section-title">Available Ticket(s) for</div>
     <div class="date-row">
-      <div class="date-item cutoff-disabled" title="Tanggal ini terkena batas cut-off">
-        <div class="day">Wed</div>
-        <div class="date">4 Nov</div>
-        <div class="badge-cut">Cut-off</div>
-      </div>
-      <div class="date-item cutoff-disabled" title="Tanggal ini terkena batas cut-off">
-        <div class="day">Thu</div>
-        <div class="date">5 Nov</div>
-        <div class="badge-cut">Cut-off</div>
-      </div>
-      <div class="date-item cutoff-disabled" title="Tanggal ini terkena batas cut-off">
-        <div class="day">Fri</div>
-        <div class="date">6 Nov</div>
-        <div class="badge-cut">Cut-off</div>
-      </div>
-      <div class="date-item cutoff-disabled" title="Tanggal ini terkena batas cut-off">
-        <div class="day">Sat</div>
-        <div class="date">7 Nov</div>
-        <div class="badge-cut">Cut-off</div>
-      </div>
       <div class="date-item active">
-        <div class="day">Sun</div>
-        <div class="date">8 Nov</div>
+        <div class="day">Tue</div>
+        <div class="date">8 Dec</div>
       </div>
       <div class="date-item">
         <div class="day">Mon</div>
-        <div class="date">9 Nov</div>
+        <div class="date">7 Dec</div>
       </div>
       <div class="date-item">
-        <div class="day">Tue</div>
-        <div class="date">10 Nov</div>
+        <div class="day">Sun</div>
+        <div class="date">6 Dec</div>
       </div>
     </div>
 
-    <!-- INLINE ALERT CUT-OFF -->
-    <div class="inline-alert">
-      <div>
-        <div class="alert-title">Looking for slots on Wed, 4 Nov (Cut-Off)?</div>
-        <div class="alert-desc">Online instant confirmation is closed for 4 Nov. You can request manual allocation from our team.</div>
-      </div>
-      <div>
-        <button class="btn btn-quote" onclick="openModal('Alpha Omega Test', '04 Nov 2026 (Cut-off Date)', 'Urgent Cut-Off Request')">
-          ✉️ Enquire 4 Nov
-        </button>
-      </div>
-    </div>
-
-    <div class="section-title">Select date and package options (for 8 Nov)</div>
+    <div class="section-title">Select date and package options</div>
     <div class="package-grid">
-      <div class="package-btn active">Adult</div>
-      <div class="package-btn">Infant</div>
-      <div class="package-btn">Senior</div>
-      <div class="package-btn">Child</div>
+      <div class="package-btn" id="tabAdult" onclick="selectTab('adult')">Adult</div>
+      <div class="package-btn" id="tabInfant" onclick="selectTab('infant')">Infant</div>
+      <div class="package-btn" id="tabSenior" onclick="selectTab('senior')">Senior</div>
+      <div class="package-btn expired-tab active-due" id="tabChild" onclick="selectTab('child')">
+        Child
+        <span class="due-tag">⚠️ Sold out</span>
+      </div>
     </div>
 
-    <div class="qty-box">
+    <div id="normalBox" class="qty-box" style="display: none;">
       <div>
-        <div style="font-weight: 700;">Adult Ticket</div>
+        <div style="font-weight: 700;" id="activeTierName">Adult Ticket</div>
         <div style="font-size: 13px; color: #4a5568;">USD 22.66</div>
       </div>
       <div class="counter">
@@ -313,14 +283,29 @@
       </div>
     </div>
 
+    <!-- INLINE ALERT EXPIRED -->
+    <div id="inlineExpiredAlert" class="inline-alert">
+      <div>
+        <div class="alert-title">⚠️ Offer Sold out (Child Ticket)</div>
+        <div class="alert-desc">
+          Online instant quota for <strong>Child</strong> ticket on 8 Dec sold out. Need to request manual tickets?
+        </div>
+      </div>
+      <div>
+        <button class="btn btn-quote" onclick="openModal('Alpha Omega Test', '08 Dec 2026', 'Offer Expired (Child Ticket)')">
+          ✉️ Enquire Child Ticket
+        </button>
+      </div>
+    </div>
+
     <div class="action-footer">
       <div>
         <div style="font-size: 12px; color: #718096;">Total Amount</div>
-        <div class="total-amount">USD 22.66</div>
+        <div class="total-amount" id="totalDisplay">USD 0.00</div>
       </div>
       <div class="btn-group">
-        <button class="btn btn-outline">Add to Cart</button>
-        <button class="btn btn-primary">Book Now</button>
+        <button class="btn btn-outline" id="btnCart" disabled style="opacity: 0.5;">Add to Cart</button>
+        <button class="btn btn-primary" id="btnBook" disabled style="opacity: 0.5;">Book Now</button>
       </div>
     </div>
   </div>
@@ -375,12 +360,42 @@
 </div>
 
 <script>
+  function selectTab(type) {
+    const tabs = ['tabAdult', 'tabInfant', 'tabSenior', 'tabChild'];
+    tabs.forEach(t => document.getElementById(t).classList.remove('active', 'active-due'));
+
+    if (type === 'child') {
+      document.getElementById('tabChild').classList.add('active-due');
+      document.getElementById('normalBox').style.display = 'none';
+      document.getElementById('inlineExpiredAlert').style.display = 'flex';
+      
+      document.getElementById('totalDisplay').innerText = 'USD 0.00';
+      document.getElementById('btnCart').disabled = true;
+      document.getElementById('btnBook').disabled = true;
+      document.getElementById('btnCart').style.opacity = '0.5';
+      document.getElementById('btnBook').style.opacity = '0.5';
+    } else {
+      const activeEl = type === 'adult' ? 'tabAdult' : type === 'infant' ? 'tabInfant' : 'tabSenior';
+      document.getElementById(activeEl).classList.add('active');
+      document.getElementById('normalBox').style.display = 'flex';
+      document.getElementById('inlineExpiredAlert').style.display = 'none';
+      
+      document.getElementById('activeTierName').innerText = type.toUpperCase() + ' Ticket';
+      document.getElementById('totalDisplay').innerText = 'USD 22.66';
+      document.getElementById('btnCart').disabled = false;
+      document.getElementById('btnBook').disabled = false;
+      document.getElementById('btnCart').style.opacity = '1';
+      document.getElementById('btnBook').style.opacity = '1';
+    }
+  }
+
   function openModal(prod, date, ctx) {
     document.getElementById('mProduct').value = prod;
     document.getElementById('mDate').value = date;
     document.getElementById('mStatus').value = ctx;
     document.getElementById('enquiryModal').style.display = 'flex';
   }
+
   function closeModal() {
     document.getElementById('enquiryModal').style.display = 'none';
   }
