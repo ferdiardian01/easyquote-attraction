@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Point 1 - Cut-Off Reached</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+    body {
+      background-color: #f0f2f5;
+      padding: 40px 20px;
+      color: #333;
+    }
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    .preview-card {
+      background: #ffffff;
+      border-radius: 8px;
+      border: 1px solid #dcdfe6;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+      padding: 30px;
+      position: relative;
+    }
+    .tag-badge {
+      position: absolute;
+      top: -14px;
+      left: 20px;
+      color: #fff;
+      padding: 5px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .header-section {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid #edf2f7;
+      padding-bottom: 18px;
+      margin-bottom: 22px;
+    }
+    .title-area h2 { font-size: 22px; color: #1a202c; }
+    .location { font-size: 13px; color: #718096; margin-top: 4px; }
+    .price-area { text-align: right; }
+    .price-area .label { font-size: 12px; color: #718096; }
+    .price-area .amount { font-size: 24px; font-weight: 700; color: #e53e3e; }
+
+    .section-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #2d3748;
+      margin-bottom: 12px;
+    }
+
+    .date-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 22px;
+      overflow-x: auto;
+    }
+    .date-item {
+      min-width: 90px;
+      border: 1px solid #cbd5e0;
+      border-radius: 6px;
+      padding: 10px 8px;
+      text-align: center;
+      background: #fff;
+      cursor: pointer;
+    }
+    .date-item .day { font-size: 12px; color: #718096; }
+    .date-item .date { font-size: 14px; font-weight: 700; color: #1a202c; }
+    .date-item.active {
+      background: #1e3a8a;
+      border-color: #1e3a8a;
+    }
+    .date-item.active .day, .date-item.active .date { color: #fff; }
+
+    .date-item.cutoff-disabled {
+      background: #f7fafc;
+      border: 1px dashed #cbd5e0;
+      cursor: not-allowed;
+      opacity: 0.65;
+    }
+    .date-item.cutoff-disabled .badge-cut {
+      display: inline-block;
+      font-size: 9px;
+      background: #e53e3e;
+      color: #fff;
+      padding: 1px 4px;
+      border-radius: 3px;
+      margin-top: 3px;
+      font-weight: 700;
+    }
+
+    .package-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .package-btn {
+      border: 1px solid #cbd5e0;
+      border-radius: 6px;
+      padding: 16px 10px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 14px;
+      background: #fff;
+      cursor: pointer;
+    }
+    .package-btn.active {
+      background: #1e3a8a;
+      border-color: #1e3a8a;
+      color: #fff;
+    }
+
+    .qty-box {
+      background: #f0f4f8;
+      border-radius: 6px;
+      padding: 14px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 22px;
+    }
+    .counter { display: flex; align-items: center; gap: 12px; }
+    .counter-btn {
+      width: 30px; height: 30px;
+      border-radius: 4px;
+      background: #1e3a8a;
+      color: #fff;
+      border: none;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .inline-alert {
+      border-radius: 6px;
+      padding: 14px 18px;
+      margin-bottom: 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      background: #fffaf0;
+      border: 1px solid #fed7aa;
+      border-left: 5px solid #dd6b20;
+    }
+    .alert-title {
+      font-weight: 700;
+      font-size: 13.5px;
+      margin-bottom: 3px;
+      color: #9a3412;
+    }
+    .alert-desc {
+      font-size: 13px;
+      line-height: 1.4;
+      color: #7c2d12;
+    }
+
+    .action-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid #edf2f7;
+      padding-top: 18px;
+    }
+    .total-amount { font-size: 20px; font-weight: 700; color: #1a202c; }
+    .btn-group { display: flex; gap: 10px; align-items: center; }
+    .btn {
+      padding: 9px 18px;
+      font-size: 13.5px;
+      font-weight: 600;
+      border-radius: 4px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+    .btn-outline { border-color: #cbd5e0; background: #fff; color: #4a5568; }
+    .btn-primary { background: #1e3a8a; color: #fff; }
+    .btn-quote {
+      background: #dd6b20;
+      color: #fff;
+      border: 1px solid #c05621;
+    }
+    .btn-quote:hover { background: #c05621; }
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 999;
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-card {
+      background: #fff;
+      width: 500px;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .modal-header {
+      background: #1e3a8a;
+      color: #fff;
+      padding: 14px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .modal-body { padding: 20px; font-size: 13px; }
+    .form-group { margin-bottom: 12px; }
+    .form-group label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 4px; color: #4a5568; }
+    .form-control {
+      width: 100%; padding: 8px 10px; font-size: 13px; border: 1px solid #cbd5e0; border-radius: 4px;
+    }
+    .modal-footer {
+      padding: 12px 20px; background: #f7fafc; border-top: 1px solid #edf2f7; text-align: right;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="preview-card">
+    <div class="tag-badge" style="background: #002d62;">POINT 1: Cut-Off Reached (Online Booking Remains Active)</div>
+
+    <div class="header-section">
+      <div class="title-area">
+        <h2>Alpha Omega Test</h2>
+        <div class="location">📍 Singapore</div>
+      </div>
+      <div class="price-area">
+        <div class="label">Price starts from</div>
+        <div class="amount">USD 22.66</div>
+      </div>
+    </div>
+
+    <div class="section-title">Available Ticket(s) for</div>
+    <div class="date-row">
+      <div class="date-item cutoff-disabled" title="Tanggal ini terkena batas cut-off">
+        <div class="day">Wed</div>
+        <div class="date">4 Nov</div>
+        <div class="badge-cut">Cut-off</div>
+      </div>
+      <div class="date-item cutoff-disabled" title="Tanggal ini terkena batas cut-off">
+        <div class="day">Thu</div>
+        <div class="date">5 Nov</div>
+        <div class="badge-cut">Cut-off</div>
+      </div>
+      <div class="date-item cutoff-disabled" title="Tanggal ini terkena batas cut-off">
+        <div class="day">Fri</div>
+        <div class="date">6 Nov</div>
+        <div class="badge-cut">Cut-off</div>
+      </div>
+      <div class="date-item cutoff-disabled" title="Tanggal ini terkena batas cut-off">
+        <div class="day">Sat</div>
+        <div class="date">7 Nov</div>
+        <div class="badge-cut">Cut-off</div>
+      </div>
+      <div class="date-item active">
+        <div class="day">Sun</div>
+        <div class="date">8 Nov</div>
+      </div>
+      <div class="date-item">
+        <div class="day">Mon</div>
+        <div class="date">9 Nov</div>
+      </div>
+      <div class="date-item">
+        <div class="day">Tue</div>
+        <div class="date">10 Nov</div>
+      </div>
+    </div>
+
+    <!-- INLINE ALERT CUT-OFF -->
+    <div class="inline-alert">
+      <div>
+        <div class="alert-title">Looking for slots on Wed, 4 Nov (Cut-Off)?</div>
+        <div class="alert-desc">Online instant confirmation is closed for 4 Nov. You can request manual allocation from our team.</div>
+      </div>
+      <div>
+        <button class="btn btn-quote" onclick="openModal('Alpha Omega Test', '04 Nov 2026 (Cut-off Date)', 'Urgent Cut-Off Request')">
+          ✉️ Enquire 4 Nov
+        </button>
+      </div>
+    </div>
+
+    <div class="section-title">Select date and package options (for 8 Nov)</div>
+    <div class="package-grid">
+      <div class="package-btn active">Adult</div>
+      <div class="package-btn">Infant</div>
+      <div class="package-btn">Senior</div>
+      <div class="package-btn">Child</div>
+    </div>
+
+    <div class="qty-box">
+      <div>
+        <div style="font-weight: 700;">Adult Ticket</div>
+        <div style="font-size: 13px; color: #4a5568;">USD 22.66</div>
+      </div>
+      <div class="counter">
+        <button class="counter-btn">-</button>
+        <span style="font-weight:700;">1</span>
+        <button class="counter-btn">+</button>
+      </div>
+    </div>
+
+    <div class="action-footer">
+      <div>
+        <div style="font-size: 12px; color: #718096;">Total Amount</div>
+        <div class="total-amount">USD 22.66</div>
+      </div>
+      <div class="btn-group">
+        <button class="btn btn-outline">Add to Cart</button>
+        <button class="btn btn-primary">Book Now</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="enquiryModal">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3 style="font-size: 15px;">Manual Request / Easy Quote</h3>
+      <button style="background:none; border:none; color:#fff; font-size:18px; cursor:pointer;" onclick="closeModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Product Name</label>
+        <input type="text" id="mProduct" class="form-control" readonly style="background:#edf2f7;">
+      </div>
+      <div style="display: flex; gap: 10px;">
+        <div class="form-group" style="flex: 1;">
+          <label>Target Visit Date</label>
+          <input type="text" id="mDate" class="form-control" readonly style="background:#edf2f7;">
+        </div>
+        <div class="form-group" style="flex: 1;">
+          <label>Inquiry Context</label>
+          <input type="text" id="mStatus" class="form-control" readonly style="background:#edf2f7; color:#c53030; font-weight:700;">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Full Name *</label>
+        <input type="text" class="form-control" placeholder="e.g. Ferdi">
+      </div>
+      <div style="display: flex; gap: 10px;">
+        <div class="form-group" style="flex: 1;">
+          <label>Email *</label>
+          <input type="email" class="form-control" placeholder="ferdi@mail.com">
+        </div>
+        <div class="form-group" style="flex: 1;">
+          <label>WhatsApp / Phone *</label>
+          <input type="text" class="form-control" placeholder="+62 812 3456 789">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Comments / Ticket Pax</label>
+        <textarea class="form-control" rows="2" placeholder="Tell us how many tickets you need..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-quote" onclick="alert('Enquiry Sent Successfully!'); closeModal();">Submit Enquiry</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function openModal(prod, date, ctx) {
+    document.getElementById('mProduct').value = prod;
+    document.getElementById('mDate').value = date;
+    document.getElementById('mStatus').value = ctx;
+    document.getElementById('enquiryModal').style.display = 'flex';
+  }
+  function closeModal() {
+    document.getElementById('enquiryModal').style.display = 'none';
+  }
+</script>
+
+</body>
+</html>
